@@ -1,0 +1,100 @@
+// Intecha Docs — brand overrides (palette "Deep Ocean & Cairo")
+// Based on Paperless-ngx (GPL-3.0). Loaded after theme.scss.
+
+:root {
+  --intecha-sand: #d9b382;
+  --intecha-sand-soft: rgba(217, 179, 130, 0.14);
+  --intecha-cream: #faf6ee;
+  --intecha-petrol: #1b6d7f;
+  --intecha-radius: 0.75rem;
+  --bs-body-font-family: "Cairo", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --bs-border-radius: 0.5rem;
+  --bs-border-radius-lg: var(--intecha-radius);
+}
+
+body {
+  font-family: var(--bs-body-font-family);
+}
+
+// Navbar: deep ocean instead of flat primary
+.navbar.bg-primary {
+  background: linear-gradient(90deg, #121c21 0%, #16252b 100%) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+
+  .search-container input {
+    border-radius: 999px;
+    background-color: rgba(255, 255, 255, 0.06);
+    border-color: rgba(255, 255, 255, 0.08);
+  }
+}
+
+// Sidebar: active item with sand accent bar
+.sidebar {
+  .nav-link {
+    border-radius: 0.5rem;
+    margin: 1px 0.5rem;
+    transition: background-color 0.15s ease;
+
+    &:hover {
+      background-color: var(--intecha-sand-soft);
+    }
+
+    &.active {
+      background-color: var(--intecha-sand-soft);
+      color: var(--intecha-sand) !important;
+      box-shadow: inset 3px 0 0 var(--intecha-sand);
+      font-weight: 600;
+    }
+  }
+
+  .sidebar-heading {
+    font-size: 0.7rem;
+    opacity: 0.7;
+  }
+}
+
+// Cards: softer, rounded, lift on hover
+.card {
+  border-radius: var(--intecha-radius);
+  border-color: var(--bs-border-color);
+  overflow: hidden;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+pngx-document-card-small .card:hover,
+pngx-document-card-large .card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0.5rem 1.25rem rgba(0, 0, 0, 0.25);
+}
+
+.btn {
+  border-radius: 0.5rem;
+  font-weight: 600;
+}
+
+.badge {
+  border-radius: 999px;
+}
+
+// Sand accent for pagination / highlights
+.pagination .page-item.active .page-link {
+  background-color: var(--intecha-sand);
+  border-color: var(--intecha-sand);
+  color: #121c21;
+}
+
+h1, h2, h3, .h1, .h2, .h3 {
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+// Light mode: warm cream background
+[data-bs-theme="light"] body,
+[data-bs-theme="auto"] body {
+  --bs-body-bg: var(--intecha-cream);
+}
+@media (prefers-color-scheme: dark) {
+  [data-bs-theme="auto"] body {
+    --bs-body-bg: #121c21;
+  }
+}
