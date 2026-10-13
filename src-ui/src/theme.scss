@@ -1,8 +1,8 @@
 @use "sass:color";
 @mixin paperless-green {
-  // base color e.g. #17541f = hsl(128, 57%, 21%)
-  --pngx-primary: 128, 57%;
-  --pngx-primary-lightness: 21%;
+  // Intecha petrolio, e.g. #1B6D7F = hsl(191, 65%, 30%)
+  --pngx-primary: 191, 65%;
+  --pngx-primary-lightness: 26%;
 }
 
 :root {
@@ -35,7 +35,7 @@
 
 // Dark text colors allow for maintain contrast with theme color changes
 $text-color-light-bg: #212529;
-$text-color-dark-bg: #abb2bf;
+$text-color-dark-bg: #c9d6dd;
 $text-color-dark-bg-accent: color.adjust($text-color-dark-bg, $lightness: 10%);
 // url-encoded $text-color-light-bg
 $text-color-light-bg-esc: "%23212529";
@@ -82,16 +82,16 @@ $form-check-radio-checked-bg-image-dark: url("data:image/svg+xml,%3csvg xmlns='h
 
 // Dark mode
 @mixin paperless-green-dark-mode {
-  --pngx-primary-lightness: 31%;
+  --pngx-primary-lightness: 30%;
   --bs-primary: hsl(var(--pngx-primary),var(--pngx-primary-lightness));
 }
 
 @mixin dark-mode {
   color-scheme: dark;
   --pngx-body-color-accent: #{$text-color-dark-bg-accent};
-  --pngx-bg-alt: #242529;
-  --pngx-bg-alt2: #232323;
-  --pngx-bg-darker: #121315;
+  --pngx-bg-alt: #1a2930;
+  --pngx-bg-alt2: #16252b;
+  --pngx-bg-darker: #0e171b;
   --pngx-bg-disabled: var(--pngx-bg-alt);
   --pngx-card-hover-border: var(--bs-border-color);
   --pngx-focus-alpha: 0.6;
@@ -101,15 +101,15 @@ $form-check-radio-checked-bg-image-dark: url("data:image/svg+xml,%3csvg xmlns='h
   --bs-secondary-color: #6c757d;
   --bs-danger: #b71631;
   --bs-danger-rgb: 183, 22, 49;
-  --bs-body-bg: #161618;
-  --bs-body-bg-rgb: 22, 22, 24;
+  --bs-body-bg: #121c21;
+  --bs-body-bg-rgb: 18, 28, 33;
   --bs-secondary-bg: var(--pngx-bg-disabled);
-  --bs-secondary-bg-rgb: 36, 37, 41;
-  --bs-light: #1c1c1f;
-  --bs-light-rgb: 28, 28, 31;
+  --bs-secondary-bg-rgb: 26, 41, 48;
+  --bs-light: #152227;
+  --bs-light-rgb: 21, 34, 39;
   --bs-info: var(--pngx-bg-alt);
-  --bs-info-rgb: 36, 36, 39;
-  --bs-border-color: #34373d;
+  --bs-info-rgb: 26, 41, 48;
+  --bs-border-color: #293e47;
   --bs-tertiary-bg: var(--pngx-bg-darker);
   --bs-dark-border-subtle: var(--pngx-bg-darker);
   --bs-border-color-translucent: rgba(0, 0, 0, .175); // override bs

@@ -10,8 +10,11 @@
     routerLink="/dashboard"
     tourAnchor="tour.intro">
       @if (!hasCustomBranding) {
-        <pngx-logo extra_classes="navbar-official-logo px-1" height="2.4rem"></pngx-logo>
-        <pngx-brand-mark class="brand-mark brand-mark-slim d-none"></pngx-brand-mark>
+        <pngx-brand-mark class="brand-mark"></pngx-brand-mark>
+        <div class="brand-copy ms-2 text-truncate" [class.d-md-none]="slimSidebarEnabled">
+          <span class="brand-title text-truncate">Intecha Docs</span>
+          <span class="byline text-uppercase font-monospace">basato su Paperless-ngx</span>
+        </div>
       } @else {
         @if (customAppLogo) {
           <img class="brand-logo" [src]="customAppLogo" alt="" />
@@ -21,7 +24,7 @@
         <div class="brand-copy ms-2 text-truncate" [class.d-md-none]="slimSidebarEnabled">
           <span class="brand-title text-truncate">{{ appTitle }}</span>
           @if (customAppTitle) {
-            <span class="byline text-uppercase font-monospace" i18n>by Paperless-ngx</span>
+            <span class="byline text-uppercase font-monospace">basato su Paperless-ngx</span>
           }
         </div>
       }
