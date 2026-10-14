@@ -1,3 +1,4 @@
+import functools
 import itertools
 import logging
 import os
@@ -366,6 +367,16 @@ class ResolvedRequestDocs(NamedTuple):
     root_doc: Document
 
 
+@functools.cache
+def _frontend_build_version(lang: str) -> int:
+    try:
+        return int(
+            (Path(settings.STATIC_ROOT) / "frontend" / lang / "main.js").stat().st_mtime,
+        )
+    except OSError:
+        return 0
+
+
 class IndexView(TemplateView):
     template_name = "index.html"
 
@@ -392,11 +403,13 @@ class IndexView(TemplateView):
         context["cookie_prefix"] = settings.COOKIE_PREFIX
         context["username"] = self.request.user.username
         context["full_name"] = self.request.user.get_full_name()
-        context["styles_css"] = f"frontend/{self.get_frontend_language()}/styles.css"
-        context["polyfills_js"] = (
-            f"frontend/{self.get_frontend_language()}/polyfills.js"
-        )
-        context["main_js"] = f"frontend/{self.get_frontend_language()}/main.js"
+        # Intecha: the bundles have fixed names and are cached for hours, so a
+        # rebuilt image keeps serving stale CSS/JS. Append the build mtime.
+        lang = self.get_frontend_language()
+        v = _frontend_build_version(lang)
+        context["styles_css"] = f"frontend/{lang}/styles.css?v={v}"
+        context["polyfills_js"] = f"frontend/{lang}/polyfills.js?v={v}"
+        context["main_js"] = f"frontend/{lang}/main.js?v={v}"
         context["webmanifest"] = (
             f"frontend/{self.get_frontend_language()}/manifest.webmanifest"
         )
