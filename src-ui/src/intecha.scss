@@ -16,15 +16,58 @@ body {
   font-family: var(--bs-body-font-family);
 }
 
-// Navbar: deep ocean instead of flat primary
+// Navbar: always deep ocean, so its text is always light — independent of
+// theme (light/dark/auto) and of body.primary-light / primary-dark, which a
+// custom theme color sets and which would otherwise push dark text onto it.
 .navbar.bg-primary {
-  background: linear-gradient(90deg, #121c21 0%, #16252b 100%) !important;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  --pngx-primary-text-contrast: #eef3f5 !important;
+  --intecha-nav-muted: rgba(238, 243, 245, 0.72);
+  background: linear-gradient(90deg, #0f1a1f 0%, #152730 100%) !important;
+  border-bottom: 1px solid rgba(217, 179, 130, 0.18);
+  color: #eef3f5;
 
-  .search-container input {
-    border-radius: 999px;
-    background-color: rgba(255, 255, 255, 0.06);
-    border-color: rgba(255, 255, 255, 0.08);
+  .navbar-toggler,
+  .navbar-action,
+  .navbar-action i-bs,
+  .nav-link {
+    color: #eef3f5 !important;
+    opacity: 1 !important;
+  }
+
+  .navbar-action:hover,
+  .navbar-action:focus-visible {
+    background-color: rgba(255, 255, 255, 0.1) !important;
+  }
+
+  .search-container {
+    i-bs[name="search"],
+    .input-group-text {
+      color: var(--intecha-nav-muted) !important;
+      opacity: 1 !important;
+    }
+
+    input,
+    input.form-control {
+      color: #eef3f5 !important;
+      background-color: rgba(255, 255, 255, 0.09) !important;
+      border: 1px solid rgba(255, 255, 255, 0.18) !important;
+      border-radius: 999px;
+
+      &::placeholder {
+        color: var(--intecha-nav-muted) !important;
+        opacity: 1;
+      }
+
+      &:hover {
+        background-color: rgba(255, 255, 255, 0.12) !important;
+      }
+
+      &:focus {
+        background-color: rgba(255, 255, 255, 0.14) !important;
+        border-color: var(--intecha-sand) !important;
+        box-shadow: 0 0 0 0.2rem rgba(217, 179, 130, 0.25) !important;
+      }
+    }
   }
 }
 
@@ -113,7 +156,8 @@ h1, h2, h3, .h1, .h2, .h3 {
   }
   .byline {
     color: var(--intecha-sand) !important;
-    opacity: 0.85 !important;
+    opacity: 1 !important;
+    font-size: 0.6rem !important;
     font-family: var(--bs-body-font-family) !important;
     font-weight: 600 !important;
   }
