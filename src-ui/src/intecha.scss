@@ -98,3 +98,23 @@ h1, h2, h3, .h1, .h2, .h3 {
     --bs-body-bg: #121c21;
   }
 }
+
+// Navbar brand: readable title on deep ocean
+.navbar .navbar-brand {
+  .brand-mark {
+    width: 2.1rem !important;
+    height: 2.1rem !important;
+  }
+  .brand-title {
+    color: var(--intecha-cream) !important;
+    font-size: 1.15rem;
+    font-weight: 700 !important;
+    letter-spacing: -0.01em;
+  }
+  .byline {
+    color: var(--intecha-sand) !important;
+    opacity: 0.85 !important;
+    font-family: var(--bs-body-font-family) !important;
+    font-weight: 600 !important;
+  }
+}
