@@ -371,7 +371,9 @@ class ResolvedRequestDocs(NamedTuple):
 def _frontend_build_version(lang: str) -> int:
     try:
         return int(
-            (Path(settings.STATIC_ROOT) / "frontend" / lang / "main.js").stat().st_mtime,
+            (Path(settings.STATIC_ROOT) / "frontend" / lang / "main.js")
+            .stat()
+            .st_mtime,
         )
     except OSError:
         return 0
@@ -404,12 +406,14 @@ class IndexView(TemplateView):
         context["username"] = self.request.user.username
         context["full_name"] = self.request.user.get_full_name()
         # Intecha: the bundles have fixed names and are cached for hours, so a
-        # rebuilt image keeps serving stale CSS/JS. Append the build mtime.
+        # rebuilt image keeps serving stale CSS/JS. The build mtime goes in the
+        # template as a query string and NOT in the path: {% static %} runs the
+        # path through filepath_to_uri, which would encode "?" as "%3F".
         lang = self.get_frontend_language()
-        v = _frontend_build_version(lang)
-        context["styles_css"] = f"frontend/{lang}/styles.css?v={v}"
-        context["polyfills_js"] = f"frontend/{lang}/polyfills.js?v={v}"
-        context["main_js"] = f"frontend/{lang}/main.js?v={v}"
+        context["frontend_version"] = _frontend_build_version(lang)
+        context["styles_css"] = f"frontend/{lang}/styles.css"
+        context["polyfills_js"] = f"frontend/{lang}/polyfills.js"
+        context["main_js"] = f"frontend/{lang}/main.js"
         context["webmanifest"] = (
             f"frontend/{self.get_frontend_language()}/manifest.webmanifest"
         )
