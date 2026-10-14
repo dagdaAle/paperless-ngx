@@ -1,0 +1,74 @@
+# Intecha Docs — allinea il fork alle release di Paperless-ngx.
+# Ogni giorno controlla l'ultima release upstream; se non è ancora in `dev`
+# la unisce su un branch `sync/<tag>` e apre una PR verso `dev`.
+# Se il merge va in conflitto il job fallisce (mail di GitHub): va risolto a mano.
+# Richiede: Settings → Actions → General → "Allow GitHub Actions to create
+# and approve pull requests".
+# Dopo il merge della PR: build dell'immagine sul server + redeploy in Coolify.
+name: Intecha — sync upstream
+
+on:
+  schedule:
+    - cron: "17 5 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+      UPSTREAM: paperless-ngx/paperless-ngx
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: dev
+          fetch-depth: 0
+
+      - name: Ultima release upstream
+        id: rel
+        run: |
+          tag=$(gh release view --repo "$UPSTREAM" --json tagName -q .tagName)
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+          git remote add upstream "https://github.com/$UPSTREAM.git"
+          git fetch --quiet upstream "refs/tags/$tag:refs/tags/$tag"
+          if git merge-base --is-ancestor "$tag" HEAD; then
+            echo "Release $tag già in dev, niente da fare."
+            echo "todo=false" >> "$GITHUB_OUTPUT"
+          elif gh pr list --state open --head "sync/$tag" --json number -q '.[0].number' | grep -q .; then
+            echo "PR per $tag già aperta."
+            echo "todo=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "todo=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Merge e PR (o issue se ci sono conflitti)
+        if: steps.rel.outputs.todo == 'true'
+        env:
+          TAG: ${{ steps.rel.outputs.tag }}
+        run: |
+          git config user.name "intecha-sync[bot]"
+          git config user.email "intecha-sync@users.noreply.github.com"
+          git checkout -b "sync/$TAG"
+          if git merge --no-edit "$TAG"; then
+            git push origin "sync/$TAG"
+            gh pr create --base dev --head "sync/$TAG" \
+              --title "sync: Paperless-ngx $TAG" \
+              --body "Merge automatico della release upstream [$TAG](https://github.com/$UPSTREAM/releases/tag/$TAG), senza conflitti.
+
+          Dopo il merge: build di \`intecha/paperless-ngx:latest\` sul server e redeploy in Coolify. Controllare navbar, login e logo."
+          else
+            # Le issue sono disattivate nel fork: si fa fallire il job, così
+            # GitHub manda la mail di workflow fallito con l'elenco qui sotto.
+            {
+              echo "### Conflitti con Paperless-ngx $TAG"
+              git diff --name-only --diff-filter=U | sed 's/^/- `/; s/$/`/'
+              echo
+              echo "Da risolvere a mano: \`git fetch https://github.com/$UPSTREAM.git tag $TAG\`, poi \`git checkout -b sync/$TAG dev && git merge $TAG\`."
+            } | tee -a "$GITHUB_STEP_SUMMARY"
+            git merge --abort
+            exit 1
+          fi
